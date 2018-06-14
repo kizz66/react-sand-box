@@ -5,6 +5,10 @@
  */
 var path = require('path');
 var HtmlWebpackPlugin = require( 'html-webpack-plugin' );
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+const extractCSS = new ExtractTextPlugin('./styles.css',{
+    allChunks: true
+});
 
 module.exports = {
     entry: './src/index.js',
@@ -14,10 +18,20 @@ module.exports = {
     },
     module: {
         rules: [
-            { test: /\.(js)$/, use: 'babel-loader' }
+            { test: /\.(js)$/, use: 'babel-loader' },
+            {
+                test: /\.scss$/,
+                use: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: ['css-loader', 'sass-loader']
+                })
+            }
         ]
     },
-    plugins: [new HtmlWebpackPlugin({
+    plugins: [
+        new HtmlWebpackPlugin({
         template: 'src/index.html'
-    })]
-}
+    }),
+       extractCSS
+    ]
+};

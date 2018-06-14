@@ -1,11 +1,14 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 
+import './base.scss'
+
 class App extends Component {
     render() {
         return (
-            <div>
-                <h2>Hello World!3</h2>
+            <div className={'test'}>
+                5555555555555555
+                <h2>Hello World6666666!</h2>
             </div>
         )
     }
