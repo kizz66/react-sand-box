@@ -1,14 +1,16 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
+import { Button } from 'semantic-ui-react';
 
-import './base.scss'
+import './base.scss';
+import './semant-ui-styles/semantic.scss';
 
 class App extends Component {
     render() {
         return (
-            <div className={'test'}>
-                5555555555555555
-                <h2>Hello World6666666!</h2>
+            <div>
+                
+               <Button>click</Button>
             </div>
         )
     }
