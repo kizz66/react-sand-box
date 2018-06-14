@@ -12,10 +12,6 @@
   },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/kizz66/react-sand-box/issues"
-  },
-  "homepage": "https://github.com/kizz66/react-sand-box#readme",
   "dependencies": {
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
