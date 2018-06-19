@@ -4,9 +4,9 @@
  * Date: 14.06.2018
  */
 var path = require('path');
-var HtmlWebpackPlugin = require( 'html-webpack-plugin' );
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
-const extractCSS = new ExtractTextPlugin('./styles.css',{
+const extractCSS = new ExtractTextPlugin('./styles.css', {
     allChunks: true
 });
 
@@ -18,7 +18,16 @@ module.exports = {
     },
     module: {
         rules: [
-            { test: /\.(js)$/, use: 'babel-loader' },
+            /* {test: /\.(js)$/, use: 'babel-loader'},*/
+            {
+                test: /\.(js|jsx)$/,
+                exclude: /(node_modules|bower_components)/,
+                loader: 'babel-loader',
+                options: {
+                    presets: ['env', 'react',],
+                    plugins: ['transform-class-properties']
+                }
+            },
             {
                 test: /\.scss$/,
                 use: ExtractTextPlugin.extract({
@@ -34,8 +43,8 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-        template: 'src/index.html'
-    }),
-       extractCSS
+            template: 'src/index.html'
+        }),
+        extractCSS
     ]
 };

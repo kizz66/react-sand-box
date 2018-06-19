@@ -6,24 +6,40 @@ import './base.scss';
 import './semant-ui-styles/semantic.scss';
 
 class App extends Component {
+    /**
+     *
+     * @param props
+     */
     constructor(props) {
         super(props);
-        this.state = {name: "777"};
-    }
-    handleSubmit(e, form) {
-        console.log(form);
-        console.log(e.target);
+        this.state = {q: '555'};
     }
 
+    /**
+     *
+     * @param event
+     */
+    handleChange = (event) => {
+        this.setState({q: event.target.value});
+    }
+
+    handleClick = ()=> {
+        console.log(this.state);
+    }
+
+    /**
+     *
+     * @returns {XML}
+     */
     render() {
         return (
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
                 <Grid columns={3}>
                     <Grid.Row>
                         <Grid.Column>
                             <Form.Field>
-                                <label>First Name</label>
-                                <input placeholder='First Name' value={this.state.name}/>
+                                <label>Строка поиска</label>
+                                <input value={this.state.q} onChange={this.handleChange}/>
                             </Form.Field>
                         </Grid.Column>
                     </Grid.Row>
@@ -31,7 +47,7 @@ class App extends Component {
                         <Grid.Column>
                         </Grid.Column>
                         <Grid.Column>
-                            <Button type='submit'>Submit</Button>
+                            <Button onClick={this.handleClick}>Submit</Button>
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
