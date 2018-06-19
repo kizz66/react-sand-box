@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
     "file-loader": "^1.1.11",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
