@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
+import axios from 'axios';
 import {
     Button,
     Form,
@@ -9,14 +10,21 @@ import {
     Segment,
     Divider,
     Header,
-    Icon
+    Icon,
+    Dimmer,
+    Loader,
+    Message
 } from 'semantic-ui-react';
 
 import './base.scss';
 import './semant-ui-styles/semantic.scss';
 
+const URL = 'https://catalog.api.2gis.ru/3.0/items';
 class App extends Component {
+
     defaultParams = {
+        loading: false,
+        error: '',
         q: 'test'
     };
 
@@ -38,7 +46,25 @@ class App extends Component {
     };
 
     handleClick = ()=> {
-        console.log(this.state);
+        //   console.log(this.state);
+        this.setState({loading: true});
+        axios.get(URL, {
+            params: {
+                page: 1,
+                page_size:50,
+                q:'авто',
+                key:'ruoedw9225'
+
+            }
+        })
+            .then(response => {
+                const {meta, result} = response.data;
+                this.setState({loading: false});
+                if (meta.error) {
+                    this.setState({error: meta.error.message});
+                }
+            })
+            .catch(error => this.setState({loading: false, error: error}));
     };
 
     /**
@@ -48,7 +74,7 @@ class App extends Component {
     render() {
         return (
             <Container>
-                <Divider />
+                <Divider hidden/>
                 <Segment>
                     <Header as='h4'>
                         <Icon name='settings'/>
@@ -85,6 +111,22 @@ class App extends Component {
                             </Grid.Row>
                         </Grid>
                     </Form>
+                </Segment>
+                <Divider/>
+                <Segment>
+                    {this.state.loading && (
+                        <Dimmer active inverted>
+                            <Loader inverted>Loading</Loader>
+                        </Dimmer>
+                    )}
+                    <h3>Query result</h3>
+                    {this.state.error && (
+                        <Message
+                            negative
+                            header='Response error'
+                            content={this.state.error}
+                        />
+                    )}
                 </Segment>
             </Container>
         )
