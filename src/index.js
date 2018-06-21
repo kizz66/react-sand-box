@@ -4,6 +4,7 @@ import axios from 'axios';
 import ResultsTable from './components/index';
 import getTypes from './components/types';
 import getFields from './components/fields';
+import InputMask from 'react-input-mask';
 
 import {
     Button,
@@ -17,7 +18,8 @@ import {
     Icon,
     Dimmer,
     Loader,
-    Message
+    Message,
+    Popup
 } from 'semantic-ui-react';
 
 import './base.scss';
@@ -30,7 +32,11 @@ class App extends Component {
         loading : false,
         totalItems : null,
         error : '',
-        q : 'авто',
+        q : '',
+        page : 1,
+        pageSize : 50,
+        regionId : 1,
+        key : localStorage.getItem ( 'requestKey' ) || 'ruoedw9225',
         items : {}
     };
     
@@ -43,31 +49,52 @@ class App extends Component {
         this.state = this.defaultParams;
     }
     
-    handleChange = ( event ) => {
+    handleQChange = ( event ) => {
         this.setState ( { q : event.target.value } );
     };
     
+    handlePageChange = ( event ) => {
+        let { value }  = event.target;
+        this.setState ( { page : value } );
+    };
+    
+    handlePageSizeChange = ( event ) => {
+        let { value }  = event.target;
+        this.setState ( { pageSize : value > 50 ? 50 : value } );
+    };
+    
+    handleKeyChange = ( event ) => {
+        let { value }  = event.target;
+        this.setState ( { key : value } );
+    };
+    
+    handleRegionIdChange = ( event ) => {
+        let { value }  = event.target;
+        this.setState ( { regionId : value } );
+    };
+    
     handleClick = ()=> {
-       
-        this.setState ( { loading : true, totalItems : null } );
+        localStorage.setItem ( 'requestKey', this.state.key );
+        
+        this.setState ( { loading : true, totalItems : null, error : null } );
         axios.get ( URL, {
             params : {
-                page : 1,
-                page_size : 50,
-                region_id : 1,
+                page : this.state.page,
+                page_size : this.state.pageSize,
+                region_id : this.state.regionId,
                 type : getTypes (),
                 fields : getFields (),
                 q : this.state.q,
-                key : 'ruoedw9225'
+                key : this.state.key
             }
         } ).then ( response => {
             const { meta, result } = response.data;
             if ( meta.error ) {
-                this.setState ( { error : meta.error.message, loading : false } );
+                this.setState ( { error : meta.error.message, loading : false, items : {} } );
             } else {
                 this.setState ( { totalItems : result.total, items : result.items, loading : false } );
             }
-        } ).catch ( error => this.setState ( { loading : false, error : error } ) );
+        } ).catch ( error => this.setState ( { loading : false, error : error, items : {} } ) );
     };
     
     render () {
@@ -93,23 +120,55 @@ class App extends Component {
                             <Grid.Row>
                                 <Grid.Column>
                                     <Form.Field inline>
-                                        <Label>Searching string</Label>
-                                        <input value={this.state.q} onChange={this.handleChange}/>
+                                        <Label>Page</Label>
+                                        <InputMask value={this.state.page} onChange={this.handlePageChange}
+                                                   mask="9999" maskChar={null} style={{width:70}}/>
                                     </Form.Field>
                                 </Grid.Column>
-                                <Grid.Column></Grid.Column>
-                                <Grid.Column></Grid.Column>
+                                <Grid.Column>
+                                    <Form.Field inline>
+                                        <Label>Page size ( max 50 )</Label>
+                                        <InputMask value={this.state.pageSize} onChange={this.handlePageSizeChange}
+                                                   mask="99" maskChar={null} style={{width:70}}/>
+                                    </Form.Field>
+                                </Grid.Column>
+                                <Grid.Column>
+                                    <Form.Field inline>
+                                        <Label> <Icon name='key'/>Key</Label>
+                                        <input value={this.state.key} onChange={this.handleKeyChange}/>&nbsp;
+                                        <Popup
+                                            trigger={<Icon name='question circle outline' color='orange'  />}
+                                            content="This key may be stored in browser's local"
+                                            position='top right'
+                                        />
+                                    </Form.Field>
+                                </Grid.Column>
                             </Grid.Row>
                             <Grid.Row>
                                 <Grid.Column>
+                                    <Form.Field inline>
+                                        <Label>  <Icon name='search'/>Searching string</Label>
+                                        <input value={this.state.q} onChange={this.handleQChange}/>
+                                    </Form.Field>
                                 </Grid.Column>
                                 <Grid.Column>
+                                    <Form.Field inline>
+                                        <Label><Icon name='globe'/>Region ID</Label>
+                                        <InputMask value={this.state.regionId} onChange={this.handleRegionIdChange}
+                                                   mask="9999999" maskChar={null} style={{width:70}}/>&nbsp;
+                                        <Popup
+                                            trigger={<Icon name='question circle outline' color='orange'  />}
+                                            content="А вот это я х з что за айдишки и как они связаны с географией?"
+                                            position='top right'
+                                        />
+                                    </Form.Field>
                                 </Grid.Column>
                                 <Grid.Column>
                                     <Button.Group floated={"right"}>
-                                        <Button onClick={()=>this.setState(this.defaultParams)}>Reset form</Button>
-                                        <Button.Or />
                                         <Button onClick={this.handleClick} positive>Submit</Button>
+                                        <Button.Or />
+                                        <Button onClick={()=>this.setState(this.defaultParams)}>Reset
+                                            form</Button>
                                     </Button.Group>
                                 </Grid.Column>
                             </Grid.Row>
