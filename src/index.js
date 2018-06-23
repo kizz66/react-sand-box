@@ -4,6 +4,7 @@ import axios from 'axios';
 import ResultsTable from './components/index';
 import getTypes from './components/types';
 import getFields from './components/fields';
+import regionMap  from './components/regions';
 import InputMask from 'react-input-mask';
 
 import {
@@ -36,6 +37,7 @@ class App extends Component {
         page : 1,
         pageSize : 50,
         regionId : 1,
+        regionName : 'Новосибирск',
         key : localStorage.getItem ( 'requestKey' ) || 'ruoedw9225',
         items : {}
     };
@@ -58,11 +60,6 @@ class App extends Component {
         this.setState ( { page : value } );
     };
     
-    handlePageSizeChange = ( event ) => {
-        let { value }  = event.target;
-        this.setState ( { pageSize : value > 50 ? 50 : value } );
-    };
-    
     handleKeyChange = ( event ) => {
         let { value }  = event.target;
         this.setState ( { key : value } );
@@ -70,7 +67,10 @@ class App extends Component {
     
     handleRegionIdChange = ( event ) => {
         let { value }  = event.target;
-        this.setState ( { regionId : value } );
+        this.setState ( {
+            regionId : value,
+            regionName : regionMap[ value ] ? regionMap[ value ] : 'не определен'
+        } );
     };
     
     handleClick = ()=> {
@@ -127,9 +127,10 @@ class App extends Component {
                                 </Grid.Column>
                                 <Grid.Column>
                                     <Form.Field inline>
-                                        <Label>Page size ( max 50 )</Label>
-                                        <InputMask value={this.state.pageSize} onChange={this.handlePageSizeChange}
-                                                   mask="99" maskChar={null} style={{width:70}}/>
+                                        <Label><Icon name='globe'/>Region ID</Label>
+                                        <InputMask value={this.state.regionId} onChange={this.handleRegionIdChange}
+                                                   mask="9999999" maskChar={null} style={{width:70}}/>&nbsp;
+                                        <Label>{this.state.regionName}</Label>
                                     </Form.Field>
                                 </Grid.Column>
                                 <Grid.Column>
@@ -147,21 +148,11 @@ class App extends Component {
                             <Grid.Row>
                                 <Grid.Column>
                                     <Form.Field inline>
-                                        <Label>  <Icon name='search'/>Searching string</Label>
+                                        <Label> <Icon name='search'/>Searching string</Label>
                                         <input value={this.state.q} onChange={this.handleQChange}/>
                                     </Form.Field>
                                 </Grid.Column>
                                 <Grid.Column>
-                                    <Form.Field inline>
-                                        <Label><Icon name='globe'/>Region ID</Label>
-                                        <InputMask value={this.state.regionId} onChange={this.handleRegionIdChange}
-                                                   mask="9999999" maskChar={null} style={{width:70}}/>&nbsp;
-                                        <Popup
-                                            trigger={<Icon name='question circle outline' color='orange'  />}
-                                            content="А вот это я х з что за айдишки и как они связаны с географией?"
-                                            position='top right'
-                                        />
-                                    </Form.Field>
                                 </Grid.Column>
                                 <Grid.Column>
                                     <Button.Group floated={"right"}>
