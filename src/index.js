@@ -67,6 +67,7 @@ class App extends Component {
     
     handleRegionIdChange = ( event ) => {
         let { value }  = event.target;
+        value = parseInt(value);
         let regionId = value ? value : 1;
         this.setState ( {
             regionId : regionId,
@@ -130,7 +131,7 @@ class App extends Component {
                                     <Form.Field inline>
                                         <Label><Icon name='globe'/>Region ID</Label>
                                         <InputMask value={this.state.regionId} onChange={this.handleRegionIdChange}
-                                                   mask="9999999" maskChar={null} style={{width:70}}/>&nbsp;
+                                                   mask="99" maskChar={null} style={{width:70}}/>&nbsp;
                                         <Label>{this.state.regionName}</Label>
                                     </Form.Field>
                                 </Grid.Column>
@@ -140,7 +141,7 @@ class App extends Component {
                                         <input value={this.state.key} onChange={this.handleKeyChange}/>&nbsp;
                                         <Popup
                                             trigger={<Icon name='question circle outline' color='orange'  />}
-                                            content="This key may be stored in browser's local storage"
+                                            content="This key will be stored in browser's local storage, when you pushed submit button"
                                             position='top right'
                                         />
                                     </Form.Field>
