@@ -67,9 +67,10 @@ class App extends Component {
     
     handleRegionIdChange = ( event ) => {
         let { value }  = event.target;
+        let regionId = value ? value : 1;
         this.setState ( {
-            regionId : value,
-            regionName : regionMap[ value ] ? regionMap[ value ] : 'не определен'
+            regionId : regionId,
+            regionName : regionMap[ regionId ] ? regionMap[ regionId ] : 'не определен'
         } );
     };
     
@@ -139,7 +140,7 @@ class App extends Component {
                                         <input value={this.state.key} onChange={this.handleKeyChange}/>&nbsp;
                                         <Popup
                                             trigger={<Icon name='question circle outline' color='orange'  />}
-                                            content="This key may be stored in browser's local"
+                                            content="This key may be stored in browser's local storage"
                                             position='top right'
                                         />
                                     </Form.Field>
