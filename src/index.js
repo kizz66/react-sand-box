@@ -6,6 +6,7 @@ import getTypes from './components/types';
 import getFields from './components/fields';
 import regionMap  from './components/regions';
 import InputMask from 'react-input-mask';
+import ScrollToTop from 'react-scroll-up';
 
 import {
     Button,
@@ -35,7 +36,9 @@ class App extends Component {
         error : '',
         q : '',
         page : 1,
+        pageFieldDisable : false,
         pageSize : 50,
+        pagesTotal : null,
         regionId : 1,
         regionName : 'Новосибирск',
         key : localStorage.getItem ( 'requestKey' ) || 'ruoedw9225',
@@ -67,7 +70,7 @@ class App extends Component {
     
     handleRegionIdChange = ( event ) => {
         let { value }  = event.target;
-        value = parseInt(value);
+        value = parseInt ( value );
         let regionId = value ? value : 1;
         this.setState ( {
             regionId : regionId,
@@ -78,7 +81,7 @@ class App extends Component {
     handleClick = ()=> {
         localStorage.setItem ( 'requestKey', this.state.key );
         
-        this.setState ( { loading : true, totalItems : null, error : null } );
+        this.setState ( { loading : true, totalItems : null, error : null, pagesTotal : null } );
         axios.get ( URL, {
             params : {
                 page : this.state.page,
@@ -91,10 +94,25 @@ class App extends Component {
             }
         } ).then ( response => {
             const { meta, result } = response.data;
+            let pagesTotal = null;
+            
             if ( meta.error ) {
                 this.setState ( { error : meta.error.message, loading : false, items : {} } );
             } else {
-                this.setState ( { totalItems : result.total, items : result.items, loading : false } );
+                let pageFieldDisable;
+                if ( result.total <= this.state.pageSize ) {
+                    pageFieldDisable = true;
+                } else {
+                    pageFieldDisable = false;
+                    pagesTotal = Math.ceil ( result.total / this.state.pageSize );
+                }
+                this.setState ( {
+                    totalItems : result.total,
+                    items : result.items,
+                    loading : false,
+                    pagesTotal : pagesTotal,
+                    pageFieldDisable : pageFieldDisable
+                } );
             }
         } ).catch ( error => this.setState ( { loading : false, error : error, items : {} } ) );
     };
@@ -124,7 +142,11 @@ class App extends Component {
                                     <Form.Field inline>
                                         <Label>Page</Label>
                                         <InputMask value={this.state.page} onChange={this.handlePageChange}
-                                                   mask="9999" maskChar={null} style={{width:70}}/>
+                                                   mask="9999" maskChar={null} style={{width:70}}
+                                                   disabled={this.state.pageFieldDisable}/>
+                                        { this.state.pagesTotal && (
+                                            <Label color="blue">из {this.state.pagesTotal}</Label>
+                                        )}
                                     </Form.Field>
                                 </Grid.Column>
                                 <Grid.Column>
@@ -195,6 +217,9 @@ class App extends Component {
                     )}
                     <ResultsTable items={this.state.items}/>
                 </Segment>
+                <ScrollToTop showUnder={260}>
+                    <Icon name={'arrow circle up'} size={'big'} color={'blue'} style={{opacity:0.5}}/>
+                </ScrollToTop>
             </Container>
         )
     }
