@@ -21,7 +21,8 @@ import {
     Dimmer,
     Loader,
     Message,
-    Popup
+    Popup,
+    Checkbox
 } from 'semantic-ui-react';
 
 import './base.scss';
@@ -42,7 +43,11 @@ class App extends Component {
         regionId : 1,
         regionName : 'Новосибирск',
         key : localStorage.getItem ( 'requestKey' ) || 'ruoedw9225',
-        items : {}
+        items : {},
+        filter : {
+            site : 'off',
+            social : 'off'
+        }
     };
     
     /**
@@ -117,6 +122,72 @@ class App extends Component {
         } ).catch ( error => this.setState ( { loading : false, error : error, items : {} } ) );
     };
     
+    handleFilterChange = ( field, value ) => {
+        const { filter } = this.state;
+        filter[ field ] = value;
+        this.setState ( { filter : filter } );
+        console.log ( field, value );
+    };
+    
+    filterControlRender = () => {
+        const
+            { filter } = this.state,
+            style = { marginRight : 20 };
+        
+        return (
+            <Segment style={{minWidth:500}}>
+                <Form.Field inline>
+                    <Label> <Icon name='filter'/> Filtering by sites</Label>
+                    <Checkbox
+                        style={style}
+                        radio
+                        label='off'
+                        checked={filter.site === 'off'}
+                        onChange={()=>{this.handleFilterChange('site','off')}}
+                    />
+                    <Checkbox
+                        style={style}
+                        radio
+                        label='including'
+                        checked={filter.site === 'include'}
+                        onChange={()=>{this.handleFilterChange('site','include')}}
+                    />
+                    <Checkbox
+                        style={style}
+                        radio
+                        label='excluding'
+                        checked={filter.site === 'exclude'}
+                        onChange={()=>{this.handleFilterChange('site','exclude')}}
+                    />
+                </Form.Field>
+                <Form.Field inline>
+                    <Label> <Icon name='filter'/> Filtering by social</Label>
+                    <Checkbox
+                        style={style}
+                        radio
+                        label='off'
+                        checked={filter.social === 'off'}
+                        onChange={()=>{this.handleFilterChange('social','off')}}
+                    />
+                    <Checkbox
+                        style={style}
+                        radio
+                        label='including'
+                        checked={filter.social === 'include'}
+                        onChange={()=>{this.handleFilterChange('social','include')}}
+                    />
+                    <Checkbox
+                        style={style}
+                        radio
+                        label='excluding'
+                        checked={filter.social === 'exclude'}
+                        onChange={()=>{this.handleFilterChange('social','exclude')}}
+                    />
+                </Form.Field>
+            </Segment>
+        );
+    };
+    
     render () {
         const styles = {
             label : {
@@ -177,6 +248,7 @@ class App extends Component {
                                     </Form.Field>
                                 </Grid.Column>
                                 <Grid.Column>
+                                    {this.filterControlRender ()}
                                 </Grid.Column>
                                 <Grid.Column>
                                     <Button.Group floated={"right"}>
