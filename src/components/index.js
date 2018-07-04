@@ -26,6 +26,11 @@ export default class ResultsTable extends Component {
         }
     };
     
+    /**
+     *
+     * @param item
+     * @returns {XML}
+     */
     renderItem = ( item ) => {
         return (
             <Table.Row>
@@ -54,12 +59,28 @@ export default class ResultsTable extends Component {
         );
     };
     
+    /**
+     *
+     * @param item
+     * @param filter
+     * @returns {boolean}
+     */
+    checkFilter = ( item, filter )=> {
+        if ( filter.site === 'off' && filter.social === 'off' ) {
+            return true;
+        }
+        return false;
+    };
+    
+    /**
+     *
+     * @returns {*}
+     */
     renderRow = () => {
         const { items, filter } = this.props;
         return _.map ( items, ( item )=> {
             console.info ( item );
-            
-            return this.renderItem(item)
+            return this.checkFilter ( item, filter ) ? this.renderItem ( item ) : null;
         } );
     };
     

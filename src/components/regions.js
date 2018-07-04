@@ -9,6 +9,6 @@ const regionMap = {
     8 : 'Астрахань',
     9 : 'Екатеринбург',
     10 : 'Курган'
-}
+};
 
 export default regionMap

@@ -86,7 +86,14 @@ class App extends Component {
     handleClick = ()=> {
         localStorage.setItem ( 'requestKey', this.state.key );
         
-        this.setState ( { loading : true, totalItems : null, error : null, pagesTotal : null } );
+        this.setState ( {
+            loading : true,
+            totalItems : null,
+            error : null,
+            pagesTotal : null,
+            filter : { site : 'off', social : 'off' }
+        } );
+
         axios.get ( URL, {
             params : {
                 page : this.state.page,
@@ -121,10 +128,10 @@ class App extends Component {
             }
         } ).catch ( error => this.setState ( { loading : false, error : error, items : {} } ) );
     };
-
+    
     /**
      *
-     * @param field  string  
+     * @param field  string
      * @param value string
      */
     handleFilterChange = ( field, value ) => {
