@@ -26,35 +26,40 @@ export default class ResultsTable extends Component {
         }
     };
     
+    renderItem = ( item ) => {
+        return (
+            <Table.Row>
+                <Table.Cell>
+                    <div>{item.name}</div>
+                    <div style={{fontSize:10,color:'#999'}}> {item.full_name}</div>
+                    <div> {item.address_name}</div>
+                    <div style={{fontSize:10,color:'#999'}}> {item.address_comment}</div>
+                </Table.Cell>
+                <Table.Cell>
+                    {this._renderContacts ( item, [ 'phone' ], true )}
+                </Table.Cell>
+                <Table.Cell>
+                    {this._renderContacts ( item, [ 'website' ], true )}
+                    {this._renderContacts ( item, [ 'email' ], true )}
+                </Table.Cell>
+                <Table.Cell>
+                    {this._renderContacts ( item, [
+                        'vkontakte',
+                        'facebook',
+                        'instagram',
+                        'youtube'
+                    ], false )}
+                </Table.Cell>
+            </Table.Row>
+        );
+    };
+    
     renderRow = () => {
-        const { items } = this.props;
+        const { items, filter } = this.props;
         return _.map ( items, ( item )=> {
             console.info ( item );
-            return (
-                <Table.Row>
-                    <Table.Cell>
-                        <div>{item.name}</div>
-                        <div style={{fontSize:10,color:'#999'}}> {item.full_name}</div>
-                        <div> {item.address_name}</div>
-                        <div style={{fontSize:10,color:'#999'}}> {item.address_comment}</div>
-                    </Table.Cell>
-                    <Table.Cell>
-                        {this._renderContacts ( item, [ 'phone' ], true )}
-                    </Table.Cell>
-                    <Table.Cell>
-                        {this._renderContacts ( item, [ 'website' ], true )}
-                        {this._renderContacts ( item, [ 'email' ], true )}
-                    </Table.Cell>
-                    <Table.Cell>
-                        {this._renderContacts ( item, [
-                            'vkontakte',
-                            'facebook',
-                            'instagram',
-                            'youtube'
-                        ], false )}
-                    </Table.Cell>
-                </Table.Row>
-            )
+            
+            return this.renderItem(item)
         } );
     };
     

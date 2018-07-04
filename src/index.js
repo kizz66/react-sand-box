@@ -141,7 +141,7 @@ class App extends Component {
         return (
             <Segment style={{minWidth:500}}>
                 <Form.Field inline>
-                    <Label> <Icon name='filter'/> Filtering by sites</Label>
+                    <Label> <Icon name='filter'/> Filtering by sites&nbsp;</Label>
                     <Checkbox
                         style={style}
                         radio
@@ -291,7 +291,7 @@ class App extends Component {
                             content={this.state.error}
                         />
                     )}
-                    <ResultsTable items={this.state.items}/>
+                    <ResultsTable items={this.state.items} filter={this.state.filter}/>
                 </Segment>
                 <ScrollToTop showUnder={260}>
                     <Icon name={'arrow circle up'} size={'big'} color={'blue'} style={{opacity:0.5}}/>

@@ -1,5 +1,6 @@
 .idea
 node_modules
 public
+public/build.js
 package-lock.json
 semantic
