@@ -69,6 +69,16 @@ export default class ResultsTable extends Component {
         if ( filter.site === 'off' && filter.social === 'off' ) {
             return true;
         }
+
+        if ( filter.social === 'off' ) {
+            if ( filter.site === 'include' ) {
+                return true
+            } else if ( filter.site === 'exclude' ) {
+                return true
+            }
+            return false;
+        }
+        //todo
         return false;
     };
     
