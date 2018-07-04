@@ -121,12 +121,16 @@ class App extends Component {
             }
         } ).catch ( error => this.setState ( { loading : false, error : error, items : {} } ) );
     };
-    
+
+    /**
+     *
+     * @param field  string  
+     * @param value string
+     */
     handleFilterChange = ( field, value ) => {
         const { filter } = this.state;
         filter[ field ] = value;
         this.setState ( { filter : filter } );
-        console.log ( field, value );
     };
     
     filterControlRender = () => {
