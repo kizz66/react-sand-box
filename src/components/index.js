@@ -3,7 +3,13 @@ import _ from 'lodash';
 import {
     Table
 } from 'semantic-ui-react';
-
+const SOCIAL = [
+    'vkontakte',
+    'facebook',
+    'instagram',
+    'youtube',
+    'odnoklassniki'
+];
 export default class ResultsTable extends Component {
     /**
      *
@@ -16,11 +22,20 @@ export default class ResultsTable extends Component {
     _renderContacts = ( item, typesArray, nowrapParam ) => {
         let nowrap = nowrapParam || false;
         if ( item.contact_groups && item.contact_groups.length > 0 ) {
-            return _.map ( item.contact_groups[ 0 ][ 'contacts' ], ( contact )=> {
-                if ( typesArray.includes ( contact.type ) ) {
-                    return (<div style={{whiteSpace: nowrap ? 'nowrap': 'normal'}}>{contact.text}</div>);
-                }
+            
+            let result = [];
+            
+            _.forEach ( item.contact_groups, ( contactGroup )=> {
+                let items = _.map ( contactGroup.contacts, ( contact )=> {
+                    if ( typesArray.includes ( contact.type ) ) {
+                        return (<div style={{whiteSpace: nowrap ? 'nowrap': 'normal'}}>{contact.text}</div>);
+                    } else {
+                        return null;
+                    }
+                } );
+                result.push ( items );
             } );
+            return result;
         } else {
             return null;
         }
@@ -48,12 +63,7 @@ export default class ResultsTable extends Component {
                     {this._renderContacts ( item, [ 'email' ], true )}
                 </Table.Cell>
                 <Table.Cell>
-                    {this._renderContacts ( item, [
-                        'vkontakte',
-                        'facebook',
-                        'instagram',
-                        'youtube'
-                    ], false )}
+                    {this._renderContacts ( item, SOCIAL, false )}
                 </Table.Cell>
             </Table.Row>
         );
@@ -69,7 +79,20 @@ export default class ResultsTable extends Component {
         if ( filter.site === 'off' && filter.social === 'off' ) {
             return true;
         }
-
+        let
+            socialResult = true,
+            siteResult   = true;
+        
+        switch ( filter.site ) {
+            case 'include':
+                //      console.log ( item.contact_groups );
+                // console.log ( item.contact_groups.length );
+                break;
+            
+            case 'exclude':
+            
+        }
+        
         if ( filter.social === 'off' ) {
             if ( filter.site === 'include' ) {
                 return true
