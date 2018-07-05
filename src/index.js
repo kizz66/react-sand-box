@@ -171,6 +171,7 @@ class App extends Component {
                         onChange={()=>{this.handleFilterChange('site','exclude')}}
                     />
                 </Form.Field>
+                <Divider horizontal>And</Divider>
                 <Form.Field inline>
                     <Label> <Icon name='filter'/> Filtering by social</Label>
                     <Checkbox
@@ -261,7 +262,7 @@ class App extends Component {
                                 <Grid.Column>
                                     {this.filterControlRender ()}
                                 </Grid.Column>
-                                <Grid.Column>
+                                <Grid.Column verticalAlign='bottom'>
                                     <Button.Group floated={"right"}>
                                         <Button onClick={this.handleClick} positive>Submit</Button>
                                         <Button.Or />

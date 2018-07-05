@@ -11,6 +11,27 @@ const SOCIAL = [
     'odnoklassniki'
 ];
 export default class ResultsTable extends Component {
+    
+    /**
+     * @param item
+     * @param typesArray
+     * @returns {boolean}
+     * @private
+     */
+    _checkContactsAsExist = ( item, typesArray ) => {
+        let result = false;
+        if ( item.contact_groups && item.contact_groups.length > 0 ) {
+            _.forEach ( item.contact_groups, ( contactGroup )=> {
+                _.forEach ( contactGroup.contacts, ( contact )=> {
+                    if ( typesArray.includes ( contact.type ) ) {
+                        result = true;
+                    }
+                } );
+            } );
+        }
+        return result;
+    };
+    
     /**
      *
      * @param item
@@ -76,33 +97,34 @@ export default class ResultsTable extends Component {
      * @returns {boolean}
      */
     checkFilter = ( item, filter )=> {
+        
         if ( filter.site === 'off' && filter.social === 'off' ) {
             return true;
         }
+        
         let
             socialResult = true,
             siteResult   = true;
         
         switch ( filter.site ) {
             case 'include':
-                //      console.log ( item.contact_groups );
-                // console.log ( item.contact_groups.length );
+                siteResult = this._checkContactsAsExist ( item, [ 'website' ] );
                 break;
             
             case 'exclude':
-            
+                siteResult = ! this._checkContactsAsExist ( item, [ 'website' ] );
         }
         
-        if ( filter.social === 'off' ) {
-            if ( filter.site === 'include' ) {
-                return true
-            } else if ( filter.site === 'exclude' ) {
-                return true
-            }
-            return false;
+        switch ( filter.social ) {
+            case 'include':
+                socialResult = this._checkContactsAsExist ( item, SOCIAL );
+                break;
+            
+            case 'exclude':
+                socialResult = ! this._checkContactsAsExist ( item, SOCIAL );
         }
-        //todo
-        return false;
+        
+        return socialResult && siteResult;
     };
     
     /**
