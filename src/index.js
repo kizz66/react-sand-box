@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import {createStore, combineReducers} from 'redux';
+
 import axios from 'axios';
 import ResultsTable from './components/index';
 import getTypes from './components/types';
@@ -47,7 +49,8 @@ class App extends Component {
         filter : {
             site : 'off',
             social : 'off'
-        }
+        },
+        xlsData:[]
     };
     
     /**
