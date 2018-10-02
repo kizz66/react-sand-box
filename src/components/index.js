@@ -37,21 +37,29 @@ export default class ResultsTable extends Component {
      * @param item
      * @param typesArray
      * @param nowrapParam
-     * @returns {*}
-     * @private
+     * @param asLinkParam
+     * * @private
      */
-    _renderContacts = ( item, typesArray, nowrapParam ) => {
+    _renderContacts = ( item, typesArray, nowrapParam, asLinkParam ) => {
         let nowrap = nowrapParam || false;
+        let asLink = asLinkParam || false;
+        
         if ( item.contact_groups && item.contact_groups.length > 0 ) {
             
             let result = [];
             
             _.forEach ( item.contact_groups, ( contactGroup )=> {
                 let items = _.map ( contactGroup.contacts, ( contact )=> {
-                    if ( typesArray.includes ( contact.type ) ) {
-                        return (<div style={{whiteSpace: nowrap ? 'nowrap': 'normal'}}>{contact.text}</div>);
-                    } else {
+                    if ( ! typesArray.includes ( contact.type ) ) {
                         return null;
+                    }
+                    
+                    if ( asLink ) {
+                        return (<div style={{whiteSpace: nowrap ? 'nowrap': 'normal'}}>
+                            <a href={contact.text}>{contact.text}</a>
+                        </div>);
+                    } else {
+                        return (<div style={{whiteSpace: nowrap ? 'nowrap': 'normal'}}>{contact.text}</div>);
                     }
                 } );
                 result.push ( items );
@@ -65,7 +73,6 @@ export default class ResultsTable extends Component {
     /**
      *
      * @param item
-     * @returns {XML}
      */
     renderItem = ( item ) => {
         return (
@@ -84,7 +91,7 @@ export default class ResultsTable extends Component {
                     {this._renderContacts ( item, [ 'email' ], true )}
                 </Table.Cell>
                 <Table.Cell>
-                    {this._renderContacts ( item, SOCIAL, false )}
+                    {this._renderContacts ( item, SOCIAL, false, true )}
                 </Table.Cell>
             </Table.Row>
         );
@@ -134,7 +141,6 @@ export default class ResultsTable extends Component {
     renderRow = () => {
         const { items, filter } = this.props;
         return _.map ( items, ( item )=> {
-            console.info ( item );
             return this.checkFilter ( item, filter ) ? this.renderItem ( item ) : null;
         } );
     };
